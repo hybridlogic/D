@@ -8,7 +8,7 @@ dtrace:::BEGIN {
 }
 
 fbt::zio_*:entry {
-    printf("%-16d %-3d %-22s %-6s %x %x %x %x %x", timestamp / 1000, cpu, probefunc, probename, arg0, arg1, arg2, arg3, arg4);
+    printf("%-16d %-3d %-22s %-6s %x %x %x %x %x\n", timestamp / 1000, cpu, probefunc, probename, arg0, arg1, arg2, arg3, arg4);
 }
 
 fbt::zio_*:return {

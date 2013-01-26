@@ -49,3 +49,20 @@ fbt::zfs_freebsd_read:return, fbt::zfs_freebsd_write:return
 {
     self->path = 0; self->kb = 0; self->start = 0;
 }
+
+/* Now start printing when we start and stop taking snapshots. */
+
+fbt::zfs_ioc_snapshot:entry
+{
+    printf("%-20Y <snapshot-create>\n", walltimestamp);
+    self->snapshot_start = timestamp;
+}
+
+fbt::zfs_ioc_snapshot:return
+{
+    printf("%-20Y </snapshot-create took %dms>\n", walltimestamp,
+            (timestamp - self->snapshot_start) / 1000000);
+    self->snapshot_start = 0;
+}
+
+
