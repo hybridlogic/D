@@ -50,12 +50,7 @@ fbt::dsl_scan_sync:return
 	printf("async destroy processing completed:\t%s\n", async_destroy_err == -1 ? "no" : "yes");
 	printf("async destroy tree had %u items / %u bytes\n", async_destroy_start_count, async_destroy_start_bytes);
 	printf("async destroy tree has %u items / %u bytes\n\n", async_destroy_end_count, async_destroy_end_bytes);
-	sync_thread = 0;
-	dp = 0;
-	deadlist_start = 0;
-	async_destroy_start = 0;
-	ba_buf_ptr = 0;
-	hold_returned = 0;
+    exit(0);
 }
 
 fbt::bpobj_iterate_impl:entry
