@@ -2,7 +2,7 @@
 
 #pragma D option quiet
 #pragma D option defaultargs
-#pragma D option bufsize=20m
+#pragma D option bufsize=200m
 
 inline uint64_t TXG_MASK = 3;
 
