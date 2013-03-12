@@ -59,19 +59,19 @@ fbt::dsl_scan_sync:entry
 }
 
 fbt::dsl_scan_sync:return
-/prev_ts != 0 && (deadlist_start_bytes != 0 || async_destroy_start != 0)/
+/prev_ts != 0 && (deadlist_start != 0 || async_destroy_start != 0)/
 {
 	printf("time since previous scan (us):\t%u\n", (start - prev_ts) / 1000);
 }
 
 fbt::dsl_scan_sync:return
-/deadlist_start_bytes != 0 || async_destroy_start != 0/
+/deadlist_start != 0 || async_destroy_start != 0/
 {
 	printf("dsl_scan_sync timestamp:\t%u\n", start);
 }
 
 fbt::dsl_scan_sync:return
-/dp != 0 && deadlist_start_bytes != 0/
+/dp != 0 && deadlist_start != 0/
 {
 	printf("deadlist had %u direct items / %u sub-objects / %u bytes\n",
 	    deadlist_start_blocks, deadlist_start_subobjs, deadlist_start_bytes);
@@ -80,6 +80,7 @@ fbt::dsl_scan_sync:return
 	printf("deadlist processed blocks:\t%u\n", deadlist_blocks);
 	printf("deadlist processing time (us):\t%u\n", deadlist_elapsed / 1000);
 	printf("deadlist processing completed:\t%s\n", deadlist_err == -1 ? "no" : "yes");
+	printf("deadlist ret:\t%d\n", deadlist_err);
 
 	deadlist_elapsed = 0;
 	deadlist_err = 0;
@@ -109,13 +110,12 @@ fbt::dsl_scan_sync:return
 }
 
 fbt::dsl_scan_sync:return
-/dp != 0 && (deadlist_start_bytes != 0 || async_destroy_start != 0)/
+/dp != 0 && (deadlist_start != 0 || async_destroy_start != 0)/
 {
 	this->elapsed = timestamp - start;
 	printf("dsl_scan_sync total time (us):\t%u\n", this->elapsed / 1000);
 	printf("\n");
 	deadlist_start = 0;
-	deadlist_start_bytes = 0;
 	async_destroy_start = 0;
 }
 
