@@ -33,8 +33,8 @@ struct spa_info {
 	uint64_t vdev_sync;
 	uint64_t dsl_dataset_sync2_time;
 	uint64_t dsl_dataset_sync2;
-	uint64_t dsl_sync_task_group_sync_time;
-	uint64_t dsl_sync_task_group_sync;
+	uint64_t dsl_sync_task_sync_time;
+	uint64_t dsl_sync_task_sync;
 	uint64_t dmu_objset_sync_time;
 	uint64_t dmu_objset_sync;
 	uint64_t dsl_dir_sync_time;
@@ -78,8 +78,8 @@ fbt::spa_sync:entry
 	spas[this->thr].vdev_sync = 0;
 	spas[this->thr].dsl_dataset_sync2_time = 0;
 	spas[this->thr].dsl_dataset_sync2 = 0;
-	spas[this->thr].dsl_sync_task_group_sync_time = 0;
-	spas[this->thr].dsl_sync_task_group_sync = 0;
+	spas[this->thr].dsl_sync_task_sync_time = 0;
+	spas[this->thr].dsl_sync_task_sync = 0;
 	spas[this->thr].dmu_objset_sync_time = 0;
 	spas[this->thr].dmu_objset_sync = 0;
 	spas[this->thr].dsl_dir_sync_time = 0;
@@ -123,7 +123,7 @@ fbt::spa_sync:return
 	printf("convergance passes:\t\t%d\n", spas[this->thr].dsl_pool_sync_count);
 	printf("total dsl_pool_sync time:\t%d\n", spas[this->thr].dsl_pool_sync_time);
 	printf("\tdatasets sync time:\t%d\n", spas[this->thr].dsl_dataset_sync2_time + spas[this->thr].dsl_dataset_sync_time);
-	printf("\tsynctask time:\t\t%d\n", spas[this->thr].dsl_sync_task_group_sync_time);
+	printf("\tsynctask time:\t\t%d\n", spas[this->thr].dsl_sync_task_sync_time);
 	printf("\tmos time:\t\t%d\n", spas[this->thr].dmu_objset_sync_time);
 	printf("\tdsl dir time:\t\t%d\n",  spas[this->thr].dsl_dir_sync_time);
 	printf("vdev sync time:\t\t\t%d\n", spas[this->thr].vdev_sync_time);
@@ -330,16 +330,16 @@ fbt::zio_wait:return
 	spas[curthread].stage++;
 }
 
-fbt::dsl_sync_task_group_sync:entry
+fbt::dsl_sync_task_sync:entry
 /spas[curthread].spa != 0 && spas[curthread].stage == 4/
 {
-	spas[curthread].dsl_sync_task_group_sync = timestamp;
+	spas[curthread].dsl_sync_task_sync = timestamp;
 }
 
-fbt::dsl_sync_task_group_sync:return
+fbt::dsl_sync_task_sync:return
 /spas[curthread].spa != 0 && spas[curthread].stage == 4/
 {
-	spas[curthread].dsl_sync_task_group_sync_time += timestamp - spas[curthread].dsl_sync_task_group_sync;
+	spas[curthread].dsl_sync_task_sync_time += timestamp - spas[curthread].dsl_sync_task_sync;
 	spas[curthread].stage++;
 }
 
