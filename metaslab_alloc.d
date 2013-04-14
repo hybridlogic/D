@@ -7,6 +7,7 @@
 inline uint64_t METASLAB_WEIGHT_PRIMARY = 1ULL << 63;
 inline uint64_t METASLAB_WEIGHT_SECONDARY = 1ULL << 62;
 inline uint64_t METASLAB_ACTIVE_MASK = METASLAB_WEIGHT_PRIMARY | METASLAB_WEIGHT_SECONDARY;
+inline uint64_t ONE_GB = 1ULL << 30;
 
 
 /*int active[space_map_t *];*/
@@ -54,8 +55,10 @@ fbt::metaslab_activate:entry
 	this->mg = this->msp->ms_group;
 	/*self->mg_name = (string)this->mg->mg_vd->vdev_path;*/
 	self->mg_id = this->mg->mg_vd->vdev_id;
-	@weigths[self->mg_id, this->msp->ms_map->sm_start] = min((uint64_t)this->msp->ms_weight);
-	@raw_weigths[self->mg_id, this->msp->ms_map->sm_start] = min((uint64_t)this->msp->ms_weight & ~METASLAB_ACTIVE_MASK);
+	@weigths[self->mg_id, this->msp->ms_map->sm_start / ONE_GB] =
+	    min((uint64_t)this->msp->ms_weight);
+	@raw_weigths[self->mg_id, this->msp->ms_map->sm_start / ONE_GB] =
+	    min((uint64_t)this->msp->ms_weight & ~METASLAB_ACTIVE_MASK);
 }
 
 fbt::metaslab_df_alloc:entry
@@ -67,7 +70,10 @@ fbt::metaslab_df_alloc:entry
 	@mins["free-pct"] = min(this->free_pct);
 	@maxs["free-pct"] = max(this->free_pct);
 	@avgs["free-pct"] = avg(this->free_pct);
-	@freepct[self->mg_id, self->sm->sm_start] = min(this->free_pct);
+	@freepct[self->mg_id, self->sm->sm_start / ONE_GB] = min(this->free_pct);
+	@size[self->mg_id, self->sm->sm_start / ONE_GB] = min(self->sm->sm_size);
+	@start[self->mg_id, self->sm->sm_start / ONE_GB] = min(self->sm->sm_start);
+	@req[self->mg_id, self->sm->sm_start / ONE_GB] = count();
 }
 
 /* Not probed -- tail-call optimized with a call to metaslab_block_picker. */
@@ -126,7 +132,7 @@ fbt::metaslab_pp_maxsize:return
 	@mins["max-contiguous-kb"] = min(this->max_size);
 	@maxs["max-contiguous-kb"] = max(this->max_size);
 	@avgs["max-contiguous-kb"] = avg(this->max_size);
-	@maxcontig[self->mg_id, self->sm->sm_start] = min(this->max_size);
+	@maxcontig[self->mg_id, self->sm->sm_start / ONE_GB] = min(this->max_size);
 }
 
 fbt::avl_last:entry
@@ -144,7 +150,7 @@ fbt::avl_last:return
 	@mins["max-contiguous-kb"] = min(this->max_size);
 	@maxs["max-contiguous-kb"] = max(this->max_size);
 	@avgs["max-contiguous-kb"] = avg(this->max_size);
-	@maxcontig[self->mg_id, self->sm->sm_start] = min(this->max_size);
+	@maxcontig[self->mg_id, self->sm->sm_start / ONE_GB] = min(this->max_size);
 }
 
 profile:::tick-$1s
@@ -177,6 +183,10 @@ profile:::tick-$1s
 	printf("\n");
 	trunc(@maxs);
 
+	printf("requests per slab:\n");
+	printa("%u:%u\t%@u\n", @req);
+	printf("\n");
+	trunc(@req);
 	printf("free-pct per slab:\n");
 	printa("%u:%u\t%@u\n", @freepct);
 	printf("\n");
@@ -193,4 +203,12 @@ profile:::tick-$1s
 	printa("%u:%u\t%@u\n", @raw_weigths);
 	printf("\n");
 	trunc(@raw_weigths);
+	printf("sizes per slab:\n");
+	printa("%u:%u\t%@u\n", @size);
+	printf("\n");
+	trunc(@size);
+	printf("starting offset per slab:\n");
+	printa("%u:%u\t%@u\n", @start);
+	printf("\n");
+	trunc(@start);
 }
