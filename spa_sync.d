@@ -3,6 +3,8 @@
 #pragma D option quiet
 #pragma D option defaultargs
 #pragma D option bufsize=200m
+#pragma D option dynvarsize=256m
+#pragma D option cleanrate=5000hz
 
 inline uint64_t TXG_MASK = 3;
 
