@@ -119,11 +119,10 @@ fbt::dmu_free_range:entry, fbt::dmu_free_long_range:entry
 
 profile:::tick-$1s
 {
-	printf("=== counts ===\n");
-	printa("%s %@u\n", @counts);
+	printf("===\n");
+	printa("count_%s %@u\n", @counts);
 	clear(@counts);
-	printf("=== bytes ===\n");
-	printa("%s %@u\n", @bytes);
+	printa("bytes_%s %@u\n", @bytes);
 	clear(@bytes);
 	printf("\n");
 	printa(@others);
