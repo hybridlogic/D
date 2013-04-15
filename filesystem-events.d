@@ -5,7 +5,8 @@
 #pragma D option quiet
 #pragma D option defaultargs
 #pragma D option switchrate=10hz
-#pragma D option dynvarsize=20m
+#pragma D option dynvarsize=256m
+#pragma D option cleanrate=5000hz
 
 vfs::vop_read:entry
 /$$1 == "read"/
