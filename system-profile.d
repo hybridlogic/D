@@ -8,6 +8,5 @@
 
 profile:::profile-4001
 {
-    @stacks[pid, tid, execname, stack()] = count();
+    @stacks[pid, tid, execname, stack()] = count();
 }
-
