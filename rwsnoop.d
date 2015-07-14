@@ -1,4 +1,7 @@
 #!/usr/local/bin/bash
+
+# Copyright ClusterHQ Inc. See LICENSE file for details.
+
 #
 # rwsnoop - snoop read/write events.
 #           Written using DTrace (Solaris 10 3/05).

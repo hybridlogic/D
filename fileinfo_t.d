@@ -1,5 +1,7 @@
 #!/usr/sbin/dtrace -s
 
+/* Copyright ClusterHQ Inc. See LICENSE file for details. */
+
 /* http://forums.freebsd.org/showthread.php?t=32649 */
 
 #pragma D option quiet

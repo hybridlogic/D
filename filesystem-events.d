@@ -1,5 +1,7 @@
 #!/usr/sbin/dtrace -s
 
+/* Copyright ClusterHQ Inc. See LICENSE file for details. */
+
 /* See vfssnoop.d in the d-trace book if you want filenames */
 
 #pragma D option quiet

@@ -1,5 +1,7 @@
 #!/usr/sbin/dtrace -s
 
+/* Copyright ClusterHQ Inc. See LICENSE file for details. */
+
 #pragma D option quiet
 #pragma D option defaultargs
 #pragma D option switchrate=10hz

@@ -1,4 +1,7 @@
 fbt::zfs_read:return, zft::zfs_write:return
+
+/* Copyright ClusterHQ Inc. See LICENSE file for details. */
+
 /self->start && (timestamp- - self->start) => min_ns/
 {
     this->iotime = (timestamp - self->start) / 1000000;

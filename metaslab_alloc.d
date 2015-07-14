@@ -1,5 +1,7 @@
 #!/usr/sbin/dtrace -s
 
+/* Copyright ClusterHQ Inc. See LICENSE file for details. */
+
 #pragma D option dynvarsize=80m
 #pragma D option quiet
 

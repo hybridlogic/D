@@ -1,5 +1,7 @@
 #!/usr/sbin/dtrace -CqZs
 
+/* Copyright ClusterHQ Inc. See LICENSE file for details. */
+
 #pragma D option dynvarsize=80m
 #pragma D option cleanrate=1000hz
 
